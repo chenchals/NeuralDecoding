@@ -6,11 +6,10 @@ from sklearn.gaussian_process.kernels import RBF
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.metrics import accuracy_score
 names = ["Nearest Neighbors", "Linear SVM", "RBF SVM", "Gaussian Process",
          "Decision Tree", "Random Forest", "AdaBoost",
-         "Naive Bayes", "QDA"]
+         "Naive Bayes"]
 
 classifiers = [
     KNeighborsClassifier(1),
@@ -20,8 +19,7 @@ classifiers = [
     DecisionTreeClassifier(max_depth=5),
     RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
     AdaBoostClassifier(),
-    GaussianNB(),
-    QuadraticDiscriminantAnalysis()]
+    GaussianNB()]
 
 
 if __name__ == "__main__":
@@ -47,12 +45,12 @@ if __name__ == "__main__":
                 labels.append(int(dat['label']-1))
             take_one_out = random.randint(0, len(inputs)-1)
             # print(len(labels), take_one_out)
-            X_test = [inputs[0]]
-            y_test = [labels[0]]
-            X_train = inputs[1:]
-            y_train = labels[1:]
-            # X_train = inputs[:take_one_out] + inputs[take_one_out:]
-            # y_train = labels[:take_one_out] + labels[take_one_out:]
+            X_test = [inputs[take_one_out]]
+            y_test = [labels[take_one_out]]
+            # X_train = inputs[1:]
+            # y_train = labels[1:]
+            X_train = inputs[:take_one_out] + inputs[take_one_out:]
+            y_train = labels[:take_one_out] + labels[take_one_out:]
             # print(each)
             # iterate over classifiers
             for name, clf in zip(names, classifiers):
