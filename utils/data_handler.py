@@ -1,5 +1,12 @@
 import pandas as pd
 import numpy as np
+from os import listdir
+from os.path import isfile, join
+
+def get_file_list(mypath):
+    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    return onlyfiles
+
 def read_data(file_path):
     df = pd.read_csv(file_path, names=['timestamp', 'label', 'f1', 'f2'], dtype={'timestamp': np.int32, 'label': np.int32, 'f1': np.float32, 'f2': np.float64}, na_values=['n/a'])
     return df
