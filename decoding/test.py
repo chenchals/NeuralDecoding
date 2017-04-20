@@ -1,28 +1,28 @@
 from utils.data_handler import get_timepoints_data, get_file_list
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import RBF
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
-names = ["Nearest Neighbors", "Linear SVM", "RBF SVM", "Gaussian Process",
-         "Decision Tree", "Random Forest", "AdaBoost",
-         "Naive Bayes"]
+names = ["Nearest Neighbors", "RBF SVM",
+         "Decision Tree", "Random Forest", "AdaBoost"]
+names = [['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"][3]]
 
-classifiers = [
-    KNeighborsClassifier(1),
-    SVC(kernel="linear", C=0.025),
-    SVC(gamma=2, C=1),
-    GaussianProcessClassifier(1.0 * RBF(1.0), warm_start=True),
-    DecisionTreeClassifier(max_depth=5),
-    RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
-    AdaBoostClassifier(),
-    GaussianNB()]
+print(names)
+for hyper_parameter in range(1, 10):
+    print(hyper_parameter, end=', ')
+    classifiers = [
+        KNeighborsClassifier(hyper_parameter),
+        SVC(gamma=hyper_parameter, C=1),
+        DecisionTreeClassifier(max_depth=hyper_parameter),
+        RandomForestClassifier(max_depth=hyper_parameter, n_estimators=10, max_features=1),
+        AdaBoostClassifier(n_estimators=hyper_parameter)]
 
+    classifier_pool = dict(zip(names, classifiers))
 
-if __name__ == "__main__":
+    # setup
+    classifiers = [classifier_pool[k] for k in names]
+
     import os, random
     cur_dir = os.path.dirname(__file__)
     project_root = os.path.join(cur_dir, '..')
@@ -62,5 +62,5 @@ if __name__ == "__main__":
                 # print(name, score)
     for key in results:
         results[key] /= counter
-        print(key, results[key])
+        print(results[key])
         # print(results)
