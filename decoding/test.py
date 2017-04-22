@@ -10,6 +10,10 @@ names = ["Nearest Neighbors", "RBF SVM",
          "Decision Tree", "Random Forest", "AdaBoost"]
 names = [['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"][0:0]]
 
+'''
+hypothesis:
+The data processing is very slow, try improve the data processing part
+'''
 def single_run():
     names = ['Decision Tree']
     # names = ['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"]
@@ -62,7 +66,7 @@ def single_run():
             # print(each)
             # iterate over classifiers
             for name, clf in zip(names, classifiers):
-                print(name, clf)
+                # print(name, clf)
                 clf.fit(X_train, y_train)
                 my_answer = clf.predict(X_test)
                 score = accuracy_score(my_answer, y_test)
