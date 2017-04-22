@@ -4,12 +4,17 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.metrics import accuracy_score
+import os, random, cProfile
+
 names = ["Nearest Neighbors", "RBF SVM",
          "Decision Tree", "Random Forest", "AdaBoost"]
-names = [['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"][3]]
+names = [['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"][0:0]]
 
-print(names)
-for hyper_parameter in range(1, 10):
+def single_run():
+    names = ['Decision Tree']
+    # names = ['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"]
+    print(names)
+    hyper_parameter =1
     print(hyper_parameter, end=', ')
     classifiers = [
         KNeighborsClassifier(hyper_parameter),
@@ -21,17 +26,20 @@ for hyper_parameter in range(1, 10):
     classifier_pool = dict(zip(names, classifiers))
 
     # setup
+    # names = ['Nearest Neighbors']
     classifiers = [classifier_pool[k] for k in names]
 
-    import os, random
     cur_dir = os.path.dirname(__file__)
     project_root = os.path.join(cur_dir, '..')
     data_folder = os.path.join(project_root, 'data')
     results = dict(zip(names, [0 for _ in range(len(names))]))
     counter = 0
+    data_set = []
     for each_file in get_file_list(data_folder):
         data_path = os.path.join(project_root, 'data', each_file)
         df = get_timepoints_data(data_path)
+        data_set.append(df)
+    for df in data_set:
         X_test = y_test = X_train = y_train = []
 
         for each in df:
@@ -54,6 +62,7 @@ for hyper_parameter in range(1, 10):
             # print(each)
             # iterate over classifiers
             for name, clf in zip(names, classifiers):
+                print(name, clf)
                 clf.fit(X_train, y_train)
                 my_answer = clf.predict(X_test)
                 score = accuracy_score(my_answer, y_test)
@@ -64,3 +73,6 @@ for hyper_parameter in range(1, 10):
         results[key] /= counter
         print(results[key])
         # print(results)
+# single_run()
+# exit()
+cProfile.run('single_run()')
