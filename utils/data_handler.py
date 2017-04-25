@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 from os import listdir
 from os.path import isfile, join
 
@@ -18,9 +19,18 @@ def stats(df):
     # print(grouped)
     grouped = df.groupby(['timestamp']).size()
     print(grouped)
-    exit()
     for row in df[['timestamp', 'label', 'f1', 'f2']].iterrows():
         print(row[1])
+
+def get_sessions(file_list):
+    sessions = []
+    cur_dir = os.path.dirname(__file__)
+    project_root = os.path.join(cur_dir, '..')
+    for each_file in file_list:
+        data_path = os.path.join(project_root, 'data', each_file)
+        df = get_timepoints_data(data_path)
+        sessions.append(df)
+    return sessions
 
 def get_timepoints_data(file_path):
     df = read_data(file_path)
