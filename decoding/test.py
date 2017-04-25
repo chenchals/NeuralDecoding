@@ -7,14 +7,12 @@ from sklearn.metrics import accuracy_score
 from multiprocessing import Pool
 import os, random, cProfile
 from collections import Counter
-
+from utils.knn import KNN
 import cProfile, pstats, io
 
 
 
-names = ["Nearest Neighbors", "RBF SVM",
-         "Decision Tree", "Random Forest", "AdaBoost"]
-names = [['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"][0:0]]
+
 
 '''
 hypothesis:
@@ -65,24 +63,30 @@ def load_data():
 
 def run_model(df, verbose=False):
     # names = ['Decision Tree']
-    names = ['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"]
-    results = dict(zip(names, [0 for _ in range(len(names))]))
     # names = ['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"]
     hyper_parameter = 1
     if verbose:
         print(hyper_parameter, end=', ')
+    names = ["Nearest Neighbors", "RBF SVM",
+             "Decision Tree", "Random Forest", "AdaBoost", "KNN"]
     classifiers = [
         KNeighborsClassifier(hyper_parameter),
         SVC(gamma=hyper_parameter, C=1),
         DecisionTreeClassifier(max_depth=hyper_parameter),
         RandomForestClassifier(max_depth=hyper_parameter, n_estimators=10, max_features=1),
-        AdaBoostClassifier(n_estimators=hyper_parameter)]
+        AdaBoostClassifier(n_estimators=hyper_parameter),
+        KNN(num_neighbors=hyper_parameter)]
 
     classifier_pool = dict(zip(names, classifiers))
+
+
+    # selected = ['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost", "KNN"]
+    selected = ["KNN"]
+    results = dict(zip(selected, [0 for _ in range(len(selected))]))
     counter = 0
     # setup
     # names = ['Nearest Neighbors']
-    classifiers = [classifier_pool[k] for k in names]
+    classifiers = [classifier_pool[k] for k in selected]
 
     for each in df:
         data = each[1]
@@ -103,7 +107,7 @@ def run_model(df, verbose=False):
         y_train = labels[:take_one_out] + labels[take_one_out:]
         # print(each)
         # iterate over classifiers
-        for name, clf in zip(names, classifiers):
+        for name, clf in zip(selected, classifiers):
             # print(name, clf)
             clf.fit(X_train, y_train)
             my_answer = clf.predict(X_test)
@@ -135,12 +139,12 @@ print(get_time(s.getvalue()))
 
 
 print('num_files,time')
-for i in range(20,21):
+for i in range(1,10):
     pr.clear()
     pr.enable()
     # ... do something ...
-    end_to_end(sessions, 1*(i/20))
-
+    # end_to_end(sessions, 1*(i/20))
+    end_to_end_verbose(sessions, 1*(i/20))
     pr.disable()
     s = io.StringIO()
     ps = pstats.Stats(pr, stream=s)
