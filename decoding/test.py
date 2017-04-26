@@ -1,5 +1,5 @@
-from utils.data_handler import get_timepoints_data, get_file_list, get_sessions
-from sklearn.neighbors import KNeighborsClassifier
+from utils.data_handler import get_file_list, get_sessions
+from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
@@ -68,20 +68,21 @@ def run_model(df, verbose=False):
     if verbose:
         print(hyper_parameter, end=', ')
     names = ["Nearest Neighbors", "RBF SVM",
-             "Decision Tree", "Random Forest", "AdaBoost", "KNN"]
+             "Decision Tree", "Random Forest", "AdaBoost", "KNN", "RadiusNeighbors"]
     classifiers = [
         KNeighborsClassifier(hyper_parameter),
         SVC(gamma=hyper_parameter, C=1),
         DecisionTreeClassifier(max_depth=hyper_parameter),
         RandomForestClassifier(max_depth=hyper_parameter, n_estimators=10, max_features=1),
         AdaBoostClassifier(n_estimators=hyper_parameter),
-        KNN(num_neighbors=hyper_parameter)]
+        KNN(num_neighbors=10),
+        RadiusNeighborsClassifier(hyper_parameter)]
 
     classifier_pool = dict(zip(names, classifiers))
 
 
-    # selected = ['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost", "KNN"]
     selected = ["KNN"]
+    # selected = ["Nearest Neighbors", "RBF SVM", "Decision Tree", "Random Forest", "AdaBoost", "KNN", "RadiusNeighbors"]
     results = dict(zip(selected, [0 for _ in range(len(selected))]))
     counter = 0
     # setup

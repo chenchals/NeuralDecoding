@@ -28,7 +28,7 @@ class KNN(object):
             sim = cosine_similarity(self.x, np.array(each).reshape(1, -1))
             if num_neighbors is None:
                 num_neighbors = self.num_neighbors
-            arg = np.argsort(sim, axis=-1)[::-1][:num_neighbors][0]
+            arg = np.argsort(sim, axis=0)[::-1][:num_neighbors][0]
             # print(arg, len(sim))
             tmp = {}
             for i in arg:
