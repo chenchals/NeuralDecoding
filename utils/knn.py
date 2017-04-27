@@ -3,9 +3,11 @@ import numpy as np
 import operator
 
 class KNN(object):
-    def __init__(self, num_neighbors = 10):
+    # weight supports uniform and distance
+    def __init__(self, num_neighbors = 10, weight='uniform'):
         self.num_neighbors = num_neighbors
         self.dict = {}
+        self.weight = weight
 
     def fit(self, x, y):
         '''
@@ -33,8 +35,14 @@ class KNN(object):
             tmp = {}
             for i in arg:
                 if self.y[i] in tmp:
-                    tmp[self.y[i]] += sim[i]
+                    if self.weight == 'uniform':
+                        tmp[self.y[i]] += 1
+                    else:
+                        tmp[self.y[i]] += sim[i]
                 else:
-                    tmp[self.y[i]] = sim[i]
+                    if self.weight == 'uniform':
+                        tmp[self.y[i]] = 1
+                    else:
+                        tmp[self.y[i]] = sim[i]
             ret.append(max(tmp.items(), key=operator.itemgetter(1))[0])
         return ret

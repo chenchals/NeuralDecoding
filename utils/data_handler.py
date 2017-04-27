@@ -28,21 +28,7 @@ def get_sessions(file_list):
     project_root = os.path.join(cur_dir, '..')
     for each_file in file_list:
         data_path = os.path.join(project_root, 'data', each_file)
-        df = get_timepoints_data(data_path)
+        df = read_data(data_path).groupby(['timestamp'])
         sessions.append(df)
     return sessions
 
-def get_timepoints_data(file_path):
-    df = read_data(file_path)
-    # df['label'] = df['label'].astype(np.int32)
-    # df['timestamp'] = df['timestamp'].astype(np.int32)
-    return df.groupby(['timestamp'])
-
-if __name__ == "__main__":
-    import os
-    cur_dir = os.path.dirname(__file__)
-    project_root = os.path.join(cur_dir, '..')
-    data_path = os.path.join(project_root, 'data', 'iTYPE_1_iCE_0007_iCL_2_mi_af10_168_01_SP009a_wf_ALL02_REWTIM_01')
-    df = read_data(data_path)
-    # stats(df)
-    get_timepoints_data(data_path)

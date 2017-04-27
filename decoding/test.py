@@ -9,7 +9,7 @@ import os, random, cProfile
 from collections import Counter
 from utils.knn import KNN
 import cProfile, pstats, io
-
+import numpy as np
 
 
 
@@ -64,7 +64,7 @@ def load_data():
 def run_model(df, verbose=False):
     # names = ['Decision Tree']
     # names = ['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"]
-    hyper_parameter = 1
+    hyper_parameter = 3
     if verbose:
         print(hyper_parameter, end=', ')
     names = ["Nearest Neighbors", "RBF SVM",
@@ -75,19 +75,49 @@ def run_model(df, verbose=False):
         DecisionTreeClassifier(max_depth=hyper_parameter),
         RandomForestClassifier(max_depth=hyper_parameter, n_estimators=10, max_features=1),
         AdaBoostClassifier(n_estimators=hyper_parameter),
-        KNN(num_neighbors=10),
+        KNN(num_neighbors=hyper_parameter, weight='distance'),
         RadiusNeighborsClassifier(hyper_parameter)]
 
     classifier_pool = dict(zip(names, classifiers))
 
 
     selected = ["KNN"]
+    # selected = ["Random Forest"]
     # selected = ["Nearest Neighbors", "RBF SVM", "Decision Tree", "Random Forest", "AdaBoost", "KNN", "RadiusNeighbors"]
     results = dict(zip(selected, [0 for _ in range(len(selected))]))
     counter = 0
     # setup
     # names = ['Nearest Neighbors']
     classifiers = [classifier_pool[k] for k in selected]
+    # first_group_key = list(df.groups.keys())[0]
+    # first_group = df.get_group(first_group_key)
+    # test = [first_group for _ in range(100)]
+    # print(len(test[0]))
+    # for each in test:
+    #     data = each
+    #     inputs = []
+    #     labels = []
+    #     counter += 1
+    #     for record in data.iterrows():
+    #         dat = record[1]
+    #         inputs.append([dat['f1'], dat['f2']])
+    #         labels.append(int(dat['label']-1))
+    #     take_one_out = random.randint(0, len(inputs)-1)
+    #     # print(len(labels), take_one_out)
+    #     X_test = [inputs[take_one_out]]
+    #     y_test = [labels[take_one_out]]
+    #     # X_train = inputs[1:]
+    #     # y_train = labels[1:]
+    #     X_train = inputs[:take_one_out] + inputs[take_one_out:]
+    #     y_train = labels[:take_one_out] + labels[take_one_out:]
+    #     # print(each)
+    #     # iterate over classifiers
+    #     for name, clf in zip(selected, classifiers):
+    #         # print(name, clf)
+    #         clf.fit(X_train, y_train)
+    #         my_answer = clf.predict(X_test)
+    #         score = accuracy_score(my_answer, y_test)
+    #         results[name] += score
 
     for each in df:
         data = each[1]
@@ -114,8 +144,6 @@ def run_model(df, verbose=False):
             my_answer = clf.predict(X_test)
             score = accuracy_score(my_answer, y_test)
             results[name] += score
-            # score = clf.score(my_answer, y_test)
-            # print(name, score)
     for key in results:
         results[key] /= counter
     if verbose:
@@ -140,7 +168,7 @@ print(get_time(s.getvalue()))
 
 
 print('num_files,time')
-for i in range(1,10):
+for i in range(1,2):
     pr.clear()
     pr.enable()
     # ... do something ...
