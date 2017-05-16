@@ -26,6 +26,7 @@ def preprocessing_load_test():
 
 
 def end_to_end_verbose(sessions, scalar=0.1):
+    # each session is one file?
     length = scalar
     num_files = int(len(sessions) * length)
     print(num_files, end=',')
@@ -60,13 +61,13 @@ def load_data():
 
 
 def run_model(session, verbose=False):
-    # names = ['Decision Tree']
-    # names = ['Nearest Neighbors', 'Decision Tree', "Random Forest", "AdaBoost"]
+    # names = ['DecisionTree']
+    # names = ['NearestNeighbors', 'DecisionTree', "RandomForest", "AdaBoost"]
     hyper_parameter = 1
     if verbose:
         print(hyper_parameter, end=', ')
-    names = ["Nearest Neighbors", "RBF SVM",
-             "Decision Tree", "Random Forest", "AdaBoost", "KNN", "RadiusNeighbors"]
+    names = ["NearestNeighbors", "RBF SVM",
+             "DecisionTree", "RandomForest", "AdaBoost", "KNN", "RadiusNeighbors"]
     classifiers = [
         KNeighborsClassifier(hyper_parameter),
         SVC(gamma=hyper_parameter, C=1),
@@ -79,15 +80,17 @@ def run_model(session, verbose=False):
     classifier_pool = dict(zip(names, classifiers))
 
     # selected = ["KNN"]
-    selected = ["AdaBoost"] # "AdaBoost"
-    # selected = ["Nearest Neighbors", "RBF SVM", "Decision Tree", "Random Forest", "AdaBoost", "KNN", "RadiusNeighbors"]
+    selected = ["NearestNeighbors"] # "AdaBoost"
+    # selected = ["NearestNeighbors", "RBF SVM", "DecisionTree", "RandomForest", "AdaBoost", "KNN", "RadiusNeighbors"]
     results = dict(zip(selected, [0 for _ in range(len(selected))]))
     counter = 0
     # setup
-    # names = ['Nearest Neighbors']
+    # names = ['NearestNeighbors']
     classifiers = [classifier_pool[k] for k in selected]
 
     for each in session:
+        print(each)
+        exit()
         data = each[1]
         inputs = []
         labels = []
@@ -140,7 +143,7 @@ for i in range(1,2):
     pr.clear()
     pr.enable()
     # ... do something ...
-    end_to_end_verbose(sessions, 1)
+    end_to_end_verbose(sessions, 0.1)
     # end_to_end_verbose(sessions, 1*(i/20))
     pr.disable()
     s = io.StringIO()

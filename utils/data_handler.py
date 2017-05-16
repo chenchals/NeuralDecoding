@@ -23,9 +23,17 @@ def stats(df):
         print(row[1])
 
 def get_sessions(file_list):
+    '''
+    Each file has 49 time points of something (fixed number time points). Each time point has multiple reads from inputs.
+    This reader divides a file into multiple chunks grouped by time points
+    Each data frame df is data from one file grouped by time points (fixed number time points), each time points has various number of readings.
+    :return:  A list of data frame generated from files in file_list
+    '''
     sessions = []
     cur_dir = os.path.dirname(__file__)
     project_root = os.path.join(cur_dir, '..')
+
+
     for each_file in file_list:
         data_path = os.path.join(project_root, 'data', each_file)
         df = read_data(data_path).groupby(['timestamp'])
