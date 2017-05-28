@@ -51,6 +51,13 @@ def end_to_end_verbose(sessions, scalar=0.1, single_run=True):
         count = len(ret)
     else:
         raise Exception()
+
+
+    # collect results and save into files
+
+
+
+
     ts_all = {}
     # print(ts)
     for one_ts in ts:
@@ -89,39 +96,34 @@ def end_to_end_verbose(sessions, scalar=0.1, single_run=True):
     #     run_model(df)
 
 
-def run_experiment(mode='Single'):
-    for i in ["NearestNeighbors", "RBF SVM",
-              "DecisionTree", "RandomForest", "AdaBoost", "KNN", "RadiusNeighbors"]:
+def run_experiment(mode):
+    pr = cProfile.Profile()
+    pr.enable()
+    # ... do something ...
+    sessions = preprocessing_load_test()
 
-        alg_name = i
-        pr = cProfile.Profile()
-        pr.enable()
-        # ... do something ...
-        sessions = preprocessing_load_test()
+    pr.disable()
+    s = io.StringIO()
+    ps = pstats.Stats(pr, stream=s)
+    # print(s.getvalue())
+    ps.print_stats()
+    print('Read', len(sessions), 'files', 'in', get_time(s.getvalue()), 'secs')
 
-        pr.disable()
-        s = io.StringIO()
-        ps = pstats.Stats(pr, stream=s)
-        # print(s.getvalue())
-        ps.print_stats()
-        print('Read', len(sessions), 'files', 'in', get_time(s.getvalue()), 'secs')
-
-        print('num_files,std,alg_name,avg_precision,time')
-        for i in range(1, 2):
-            pr.clear()
-            pr.enable()
-            # ... do something ...
-            if mode.lower() == 'single':
-                end_to_end_verbose(sessions, 0.05)
-            else:
-                run_model_100(sessions, 0.05)
-            # end_to_end_verbose(sessions, 1*(i/20))
-            pr.disable()
-            s = io.StringIO()
-            ps = pstats.Stats(pr, stream=s)
-            # print(s.getvalue())
-            ps.print_stats()
-            print(get_time(s.getvalue()))
+    print('num_files,std,alg_name,avg_precision,time')
+    pr.clear()
+    pr.enable()
+    # ... do something ...
+    if mode.lower() == 'single':
+        end_to_end_verbose(sessions, 0.05)
+    else:
+        run_model_100(sessions, 0.05)
+    # end_to_end_verbose(sessions, 1*(i/20))
+    pr.disable()
+    s = io.StringIO()
+    ps = pstats.Stats(pr, stream=s)
+    # print(s.getvalue())
+    ps.print_stats()
+    print(get_time(s.getvalue()))
 
 
 # print()

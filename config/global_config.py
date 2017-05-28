@@ -4,16 +4,16 @@ cur_dir = os.path.dirname(__file__)
 project_root = os.path.join(cur_dir, '..')
 
 CONFIG_PATH = os.path.join(project_root, 'config')
-PIPELINE_CONFIG_PATH = os.path.join(CONFIG_PATH, 'pipeline_config.json')
+PIPELINE_CONFIG_PATH = os.path.join(CONFIG_PATH, 'experiment_config.json')
 
 
 
 class _pipeline_config(object):
     def __init__(self):
-        self._config = json.load(open(PIPELINE_CONFIG_PATH), 'r')
+        self._config = json.load(open(PIPELINE_CONFIG_PATH, 'r'))
         self.__model_name = self.__get_required('model_name')
         self.__hyper_parameter = self.__get_required('hyper_parameter')
-        self.__mode = self.__get_not_required('mode')
+        self.__mode = self.__get_not_required('mode', '1')
 
     @property
     def MODEL_NAME(self):
@@ -33,6 +33,11 @@ class _pipeline_config(object):
 
     @property
     def MODE(self):
+        return self.__mode
+
+    @MODE.setter
+    def MODE(self, *arg, **kwargs):
+        raise Exception("Set property outside the class scope is prohibited")
 
     def __get_not_required(self, key, default):
         return self._config.get(key, default)
