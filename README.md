@@ -1,4 +1,4 @@
-# Setup
+# Download IDE and code
 
 1. Download Pycharm @ https://www.jetbrains.com/pycharm/
 2. Install Pycharm
