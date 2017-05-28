@@ -1,12 +1,13 @@
-# NeuralDecoding
-neural decoding project to decode brain neural activities
+# Setup
+
+1. Download Pycharm @ https://www.jetbrains.com/pycharm/
+2. Install Pycharm
+3. Open Pycharm
+4. Click VCS->Git->Clone
+5. Copy and paste this url in `Git Repository URL` box https://github.com/colpain/NeuralDecoding.git
+6. Click Clone
 
 
-# Some Results
-```bash
-Read 363 files in 2.320 secs
-num_files,std,alg_name,avg_precision,time
-363,0.193734578416,KNN 0.729572418616,52.406
-363,0.138302614063,Random Forest 0.680538594607,126.633
-363,0.139268680696,AdaBoost 0.676115370537,61.284
-```
+# How to use
+
+Use `pipeline_config.json` config file to config the pipeline.

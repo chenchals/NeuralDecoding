@@ -4,6 +4,11 @@ import os
 from os import listdir
 from os.path import isfile, join
 
+
+cur_dir = os.path.dirname(__file__)
+project_root = os.path.join(cur_dir, '..')
+data_folder = os.path.join(project_root, 'data')
+
 def get_file_list(mypath):
     onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
     return onlyfiles
@@ -40,3 +45,12 @@ def get_sessions(file_list):
         sessions.append(df)
     return sessions
 
+
+def load_data():
+    # each session is a file, each file has 49 time points
+    data_set = get_sessions(get_file_list(data_folder))
+    return data_set
+
+
+def get_time(string):
+    return string.split('\n')[0].strip().split(' ')[-2]
