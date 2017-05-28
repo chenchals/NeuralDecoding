@@ -3,6 +3,10 @@ This project is under refactoring... Please come later...
 
 # Download IDE and code
 
+## Command line
+
+
+## Use Pycharm
 1. Download Pycharm @ https://www.jetbrains.com/pycharm/
 2. Install Pycharm
 3. Open Pycharm
@@ -33,4 +37,4 @@ Explanations of config file fields are given below:
 
 ## Generate reports
 
-Change to the project root directory, run `python3 bin/gen_reports.py`
+Change to the project root directory `{YOURPATH_TO}/NeuralDecoding`, run `python3 bin/gen_reports.py`
