@@ -5,14 +5,13 @@ from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
-from decoding.test import alg_name
 from utils.knn import KNN
-from config.global_config import PIPELINE_CONFIG_PATH
+from config.global_config import PIPELINE_CONFIG
 
 def run_model(session, verbose=False, debug=False):
     # names = ['DecisionTree']
     # names = ['NearestNeighbors', 'DecisionTree', "RandomForest", "AdaBoost"]
-    hyper_parameter = 1
+    hyper_parameter = PIPELINE_CONFIG.HYPER_PARAMETER
     if verbose:
         print(hyper_parameter, end=', ')
     names = ["NearestNeighbors", "RBF SVM",
@@ -28,9 +27,8 @@ def run_model(session, verbose=False, debug=False):
 
     classifier_pool = dict(zip(names, classifiers))
 
-    # selected = ["KNN"]
-    selected = [alg_name] # "AdaBoost"
-    # selected = ["NearestNeighbors", "RBF SVM", "DecisionTree", "RandomForest", "AdaBoost", "KNN", "RadiusNeighbors"]
+    selected = PIPELINE_CONFIG.MODEL_NAME
+
     results = dict(zip(selected, [0 for _ in range(len(selected))]))
     counter = 0
     # setup
@@ -85,7 +83,7 @@ def run_model(session, verbose=False, debug=False):
 def run_model_100(session, verbose=False, debug=False):
     # names = ['DecisionTree']
     # names = ['NearestNeighbors', 'DecisionTree', "RandomForest", "AdaBoost"]
-    hyper_parameter = 1
+    hyper_parameter = PIPELINE_CONFIG.HYPER_PARAMETER
     if verbose:
         print(hyper_parameter, end=', ')
     names = ["NearestNeighbors", "RBF SVM",
@@ -101,8 +99,8 @@ def run_model_100(session, verbose=False, debug=False):
 
     classifier_pool = dict(zip(names, classifiers))
 
-    pipeline_config = json.load(PIPELINE_CONFIG_PATH)
-    selected = pipeline_config.get('model_name', None)
+
+    selected = PIPELINE_CONFIG.MODEL_NAME
     results = dict(zip(selected, [0 for _ in range(len(selected))]))
     counter = 0
     # setup
