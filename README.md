@@ -1,3 +1,6 @@
+# UPDATE
+This project is under refactoring... Please come later...
+
 # Download IDE and code
 
 1. Download Pycharm @ https://www.jetbrains.com/pycharm/

@@ -1,4 +1,4 @@
-from decoding.confusion_matrix_precision_std import main
+from bin.gen_reports import main
 
 if __name__ == "__main__":
     main()
