@@ -23,3 +23,4 @@ Explaination of fields in config file is given below:
   6. "KNN"
   7. "RadiusNeighbors"
 - hyper_parameter: the hyper parameter to define the model complexity, the higher the more complex model is
+- mode: experiment mode: available options are [100, 1], means either run 100 calls per time point of 1 call per time point, more options will be added in future
