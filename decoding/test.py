@@ -213,18 +213,14 @@ def run_model_100(session, verbose=False, debug=False):
         confusion_matrix = []
 
         for name, clf in zip(selected, classifiers):
-            # heavy computation here,
+            # heavy computation here, run 100 times per time point
             for _ in range(100):
                 take_one_out = random.randint(0, len(inputs)-1)
                 # print(len(labels), take_one_out)
                 X_test = [inputs[take_one_out]]
                 y_test = [labels[take_one_out]]
-                # X_train = inputs[1:]
-                # y_train = labels[1:]
                 X_train = inputs[:take_one_out] + inputs[take_one_out:]
                 y_train = labels[:take_one_out] + labels[take_one_out:]
-                # print(each)
-                # iterate over classifiers
                 # print(name, clf)
                 clf.fit(X_train, y_train)
                 my_answer = clf.predict(X_test)
