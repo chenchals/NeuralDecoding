@@ -1,12 +1,12 @@
 # UPDATE
 This project is under refactoring... Please come later...
 
-# Download IDE and code
+# Download Code
 
 ## Command line
 
 
-## Use Pycharm
+## Pycharm
 1. Download Pycharm @ https://www.jetbrains.com/pycharm/
 2. Install Pycharm
 3. Open Pycharm
