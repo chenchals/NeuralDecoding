@@ -1,6 +1,4 @@
-import cProfile
-import io
-import os
+import cProfile, io, os
 import pstats
 from collections import Counter
 from multiprocessing import Pool
@@ -9,6 +7,10 @@ from numpy import std
 
 from decoding.pipeline import run_model, run_model_100
 from utils.data_handler import load_data, get_time
+from config.global_config import PIPELINE_CONFIG
+
+
+
 
 cur_dir = os.path.dirname(__file__)
 project_root = os.path.join(cur_dir, '..')

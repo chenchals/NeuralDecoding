@@ -13,6 +13,7 @@ class _pipeline_config(object):
         self._config = json.load(open(PIPELINE_CONFIG_PATH), 'r')
         self.__model_name = self.__get_required('model_name')
         self.__hyper_parameter = self.__get_required('hyper_parameter')
+        self.__mode = self.__get_not_required('mode')
 
     @property
     def MODEL_NAME(self):
@@ -29,6 +30,12 @@ class _pipeline_config(object):
     @HYPER_PARAMETER.setter
     def HYPER_PARAMETER(self, *arg, **kwargs):
         raise Exception("Set property outside the class scope is prohibited")
+
+    @property
+    def MODE(self):
+
+    def __get_not_required(self, key, default):
+        return self._config.get(key, default)
 
     def __get_required(self, tag):
         ret = self._config.get(tag, None)

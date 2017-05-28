@@ -10,11 +10,12 @@
 
 # How to use
 
-Use `pipeline_config.json` config file to config the pipeline.
+## Experiment Config
+Use `experiment_config.json` config file to config the experiment.
 
-Explaination of fields in config file is given below:
+Explanations of config file fields are given below:
 
-- model_name: the name of the model used in the pipeline, available models are:
+- model_name [REQUIRED]: the name of the model used in the pipeline, available models are:
   1. "NearestNeighbors" 
   2. "RBF SVM"
   3. "DecisionTree"
@@ -22,5 +23,5 @@ Explaination of fields in config file is given below:
   5. "AdaBoost"
   6. "KNN"
   7. "RadiusNeighbors"
-- hyper_parameter: the hyper parameter to define the model complexity, the higher the more complex model is
-- mode: experiment mode: available options are [100, 1], means either run 100 calls per time point of 1 call per time point, more options will be added in future
+- hyper_parameter [REQUIRED]: the hyper parameter to define the model complexity, the higher the more complex model is
+- mode: experiment mode [OPTIONAL]: available options are [100, 1], means either run 100 calls per time point of 1 call per time point, more options will be added in future. The default value of this field is 1
