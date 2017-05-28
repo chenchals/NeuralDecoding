@@ -13,6 +13,8 @@ This project is under refactoring... Please come later...
 
 # How to use
 
+You have to configure the experiment setup in order to use the tools. All applications are in `bin` folder.
+
 ## Experiment Config
 Use `experiment_config.json` config file to config the experiment.
 
@@ -28,3 +30,7 @@ Explanations of config file fields are given below:
   7. "RadiusNeighbors"
 - hyper_parameter [REQUIRED]: the hyper parameter to define the model complexity, the higher the more complex model is
 - mode: experiment mode [OPTIONAL]: available options are [100, 1], means either run 100 calls per time point of 1 call per time point, more options will be added in future. The default value of this field is 1
+
+## Generate reports
+
+Change to the project root directory, run `python3 bin/gen_reports.py`
