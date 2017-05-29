@@ -14,6 +14,7 @@ class _pipeline_config(object):
         self.__model_name = self.__get_required('model_name')
         self.__hyper_parameter = self.__get_required('hyper_parameter')
         self.__mode = self.__get_not_required('mode', '1')
+        self.__output_path = os.path.join(project_root, 'results')
 
     @property
     def MODEL_NAME(self):
@@ -38,6 +39,15 @@ class _pipeline_config(object):
     @MODE.setter
     def MODE(self, *arg, **kwargs):
         raise Exception("Set property outside the class scope is prohibited")
+
+    @property
+    def OUTPUT_FOLDER_PATH(self):
+        return self.__output_path
+
+    @OUTPUT_FOLDER_PATH.setter
+    def OUTPUT_FOLDER_PATH(self, *arg, **kwargs):
+        raise Exception("Set property outside the class scope is prohibited")
+
 
     def __get_not_required(self, key, default):
         return self._config.get(key, default)

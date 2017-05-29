@@ -1,5 +1,5 @@
 import random, json
-
+import numpy as np
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
@@ -24,7 +24,6 @@ def run_model(session, verbose=False, debug=False):
         AdaBoostClassifier(n_estimators=hyper_parameter),
         KNN(num_neighbors=hyper_parameter, weight='distance'),
         RadiusNeighborsClassifier(hyper_parameter)]
-
     classifier_pool = dict(zip(names, classifiers))
 
     selected = PIPELINE_CONFIG.MODEL_NAME
@@ -105,16 +104,21 @@ def run_model_100(session, verbose=False, debug=False):
     counter = 0
     # setup
     # names = ['NearestNeighbors']
-    classifiers = [classifier_pool[k] for k in selected]
     # print(len(sessions))
     time_points = dict()
     for time_point in session:
         timestamp = 0
+        # second cell is the actual data (pandas data frame convention
         time_point_data = time_point[1]
         inputs = []
         labels = []
-        scores = []
         counter += 1
+        ret_obj = {
+            'confusion_matrices': [],
+            'scores': [],
+            'precision': .0,
+            'std': .0
+        }
         for record in time_point_data.iterrows():
             dat = record[1]
             if dat['timestamp'] not in time_points:
@@ -128,32 +132,31 @@ def run_model_100(session, verbose=False, debug=False):
             # to make sure each time point data has the time point value
             assert len(list(time_points.keys())) == 1
         # print(time_set)
-        confusion_matrix = []
+        # list of binary encoding
+        # [ '01', '11'...]
+        clf = classifier_pool[selected]
+        # heavy computation here, run 100 times per time point
+        # run 100 leave one out prediction for each time point
+        for _ in range(100):
+            # generate random leave one out index
+            take_one_out = random.randint(0, len(inputs)-1)
+            X_test = [inputs[take_one_out]]
+            y_test = [labels[take_one_out]]
+            X_train = inputs[:take_one_out] + inputs[take_one_out:]
+            y_train = labels[:take_one_out] + labels[take_one_out:]
+            # print(name, clf)
+            clf.fit(X_train, y_train)
+            my_answer = clf.predict(X_test)
+            # I need to record confusion matrix here
+            # compare y_test with my_answer to calculate that
+            # 11, 10, 00, 01
+            score = accuracy_score(my_answer, y_test)
+            ret_obj['confusion_matrices'].append(''.join([str(my_answer[0]), str(y_test[0])]))
+            # record 100 calls for avg and std
+            ret_obj['scores'].append(score)
+        ret_obj['precision'] = sum(ret_obj['scores'])/counter
+        ret_obj['std'] = np.std(ret_obj['scores'])
+        time_points[timestamp] = ret_obj
+        # print(time_points)
 
-        for name, clf in zip(selected, classifiers):
-            # heavy computation here, run 100 times per time point
-            for _ in range(100):
-                take_one_out = random.randint(0, len(inputs)-1)
-                # print(len(labels), take_one_out)
-                X_test = [inputs[take_one_out]]
-                y_test = [labels[take_one_out]]
-                X_train = inputs[:take_one_out] + inputs[take_one_out:]
-                y_train = labels[:take_one_out] + labels[take_one_out:]
-                # print(name, clf)
-                clf.fit(X_train, y_train)
-                my_answer = clf.predict(X_test)
-                # I need to record confusion matrix here
-                # compare y_test with my_answer to calculate that
-                # 11, 10, 00, 01
-                score = accuracy_score(my_answer, y_test)
-                confusion_matrix.append(''.join([str(my_answer), str(y_test)]))
-                # record 100 calls for avg and std
-                scores.append(score)
-                time_points[timestamp] = confusion_matrix
-            results[name] = scores
-    # print(time_points)
-    for key in results:
-        results[key] /= counter
-    if verbose:
-        print(results)
-    return results, time_points
+    return time_points

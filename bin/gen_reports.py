@@ -1,4 +1,5 @@
 import cProfile, io, os
+import json # to save results
 import pstats
 from collections import Counter
 from multiprocessing import Pool
@@ -24,33 +25,31 @@ hypothesis:
 The data processing is very slow, try improve the data processing part
 '''
 
-global alg_name
 
 def preprocessing_load_test():
     return load_data()
 
 
 
-def end_to_end_verbose(sessions, scalar=0.1, single_run=True):
+def end_to_end_verbose(sessions, scalar=0.1,):
     # each session is one file?
     length = scalar
     num_files = int(len(sessions) * length)
-    print(num_files, end=',')
     p = Pool(8)
     sessions = sessions[:num_files]
     # return two things, aggregate and time series
-    if single_run:
-        ret = p.map(run_model, sessions)
-    else:
-        ret = p.map(run_model_100, sessions)
+    ret = p.map(run_model_100, sessions)
     p.close()
     p.join()
     # this is the time series
-    if single_run:
-        ts = [Counter(x[1]) for x in ret]
-        count = len(ret)
-    else:
-        raise Exception()
+    # this is the list of timepoint jsons
+    # print hereh
+    with open(os.path.join(PIPELINE_CONFIG.OUTPUT_FOLDER_PATH, 'results.json'), 'w') as f:
+        json.dump(ret[0], f, sort_keys=True, indent=4)
+
+
+    print('done!')
+    return
 
 
     # collect results and save into files
@@ -96,7 +95,7 @@ def end_to_end_verbose(sessions, scalar=0.1, single_run=True):
     #     run_model(df)
 
 
-def run_experiment(mode):
+def run_experiment():
     pr = cProfile.Profile()
     pr.enable()
     # ... do something ...
@@ -113,11 +112,7 @@ def run_experiment(mode):
     pr.clear()
     pr.enable()
     # ... do something ...
-    if mode.lower() == 'single':
-        end_to_end_verbose(sessions, 0.05)
-    else:
-        run_model_100(sessions, 0.05)
-    # end_to_end_verbose(sessions, 1*(i/20))
+    end_to_end_verbose(sessions, 0.05)
     pr.disable()
     s = io.StringIO()
     ps = pstats.Stats(pr, stream=s)
